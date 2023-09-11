@@ -13,16 +13,22 @@ jobs:
     defaults:
       run:
         shell: devx {0}
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler-nix-name: [ghc8107]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install GHC and Cabal
         uses: input-output-hk/actions/devx@latest
         with:
-          platform: x86_64-linux
+          platform: ${{ matrix.os == 'ubuntu-latest' && 'x86_64-linux' || 'x86_64-darwin' }}
           target-platform: ""
-          compiler-nix-name: ghc8107
+          compiler-nix-name: ${{ matrix.compiler-nix-name }}
           minimal: false
           iog: true
       - name: cabal update
@@ -33,9 +39,8 @@ jobs:
           path: |
             ~/.cabal-devx/packages
             ~/.cabal-devx/store
-            dist-newstyle
-          key: ${{ runner.os }}-ghc8170-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
-          restore-keys: ${{ runner.os }}-ghc8107-
+          key: ${{ runner.os }}-${{ matrix.compiler-nix-name }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.compiler-nix-name }}-
       - name: cabal build dependencies
         run: cabal build all -j --enable-tests --only-dependencies
       - name: cabal build
