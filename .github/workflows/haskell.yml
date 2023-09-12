@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build executable
+    name: build
     defaults:
       run:
         shell: devx {0}
@@ -45,3 +45,45 @@ jobs:
         run: cabal build all -j --enable-tests --only-dependencies
       - name: cabal build
         run: cabal build all -j --enable-tests
+      - name: postgres init
+        run: |
+          # Set up environment
+          PG_DIR="$(mktemp -d)"
+          PGPASSFILE="${PG_DIR}/pgpass-testing"
+          DBUSER=$(whoami)
+          DBNAME=$DBUSER
+          DBPASS=
+
+          # Initialise database
+          initdb --encoding=UTF8 --username=postgres "${PG_DIR}/db"
+          postgres -D "${PG_DIR}/db" -c listen_addresses="" -k "${PG_DIR}" &
+          PSQL_PID=$!
+          echo $PSQL_PID > "${PG_DIR}/postgres.pid"
+
+          # Verify Postgres is running
+          sleep 10
+          if (echo '\q' | psql -h ${PG_DIR} postgres postgres); then
+            echo "PostgreSQL server is verified to be started."
+          else
+            echo "Failed to connect to local PostgreSQL server."
+            exit 2
+          fi
+
+          # Create pgpass file
+          echo "${PG_DIR}:5432:$DBUSER:$DBUSER:*" > $PGPASSFILE
+          chmod 600 $PGPASSFILE
+
+          # Create database
+          psql -h "${PG_DIR}" postgres postgres <<EOF
+            create role $DBUSER with createdb login password '$DBPASS';
+            alter user $DBUSER with superuser;
+            create database $DBNAME with owner = $DBUSER;
+            \\connect $DBNAME
+            ALTER SCHEMA public   OWNER TO $DBUSER;
+          EOF
+
+          # Pass environment to subsequent steps
+          echo "PG_DIR=${PG_DIR}" >> "$GITHUB_ENV"
+          echo "PGPASSFILE=${PGPASSFILE}" >> "$GITHUB_ENV"
+      - name: cabal test
+        run: cabal test all -j1
