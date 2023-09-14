@@ -39,6 +39,7 @@ jobs:
           path: |
             ~/.cabal-devx/packages
             ~/.cabal-devx/store
+            dist-newstyle
           key: ${{ runner.os }}-${{ matrix.compiler-nix-name }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
           restore-keys: ${{ runner.os }}-${{ matrix.compiler-nix-name }}-
       - name: cabal build dependencies
