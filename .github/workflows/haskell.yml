@@ -23,6 +23,7 @@ jobs:
 
     steps:
       - name: Show curl info
+        shell: bash
         run: |
           which curl
           curl --version
