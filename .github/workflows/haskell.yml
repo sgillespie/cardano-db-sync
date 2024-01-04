@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        compiler-nix-name: [ghc8107, ghc928, ghc962]
+        compiler-nix-name: [ghc810, ghc92, ghc96]
 
     steps:
       - name: Show curl info
