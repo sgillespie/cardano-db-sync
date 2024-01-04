@@ -22,6 +22,11 @@ jobs:
         compiler-nix-name: [ghc8107, ghc928, ghc962]
 
     steps:
+      - name: Show curl info
+        run: |
+          which curl
+          curl --version
+          curl https://google.com
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install GHC and Cabal
@@ -33,6 +38,11 @@ jobs:
           minimal: false
           # enable IOG flavour to bring in all the crypto libraries we need.
           iog: true
+      - name: Show curl info (devx)
+        run: |
+          which curl
+          curl --version
+          curl https://google.com
       - name: cache cabal
         uses: actions/cache@v3
         with:
@@ -41,6 +51,7 @@ jobs:
             ~/.cabal-devx/store
           key: ${{ runner.os }}-${{ matrix.compiler-nix-name }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
           restore-keys: ${{ runner.os }}-${{ matrix.compiler-nix-name }}-
+      # FIXME[sgillespie]
       - name: cabal update
         run: cabal update
       - name: cabal build dependencies
@@ -48,7 +59,7 @@ jobs:
       - name: cabal build
         run: cabal build all -j --enable-tests
       - name: postgres init
-        working-directory: 
+        working-directory:
         run: |
           # Set up environment
           PG_DIR="$(mktemp -d)"
