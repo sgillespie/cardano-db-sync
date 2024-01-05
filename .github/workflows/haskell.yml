@@ -43,7 +43,7 @@ jobs:
         run: |
           which curl
           curl --version
-          curl https://google.com
+          # curl https://google.com
       - name: cache cabal
         uses: actions/cache@v3
         with:
