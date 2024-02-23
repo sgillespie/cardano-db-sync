@@ -26,6 +26,7 @@ module Cardano.DbSync.Config.Types (
   ForceTxIn (..),
   LedgerInsertConfig (..),
   ShelleyInsertConfig (..),
+  RewardsConfig (..),
   MultiAssetConfig (..),
   MetadataConfig (..),
   PlutusConfig (..),
@@ -158,6 +159,7 @@ data SyncInsertOptions = SyncInsertOptions
   { sioTxOut :: TxOutConfig
   , sioLedger :: LedgerInsertConfig
   , sioShelley :: ShelleyInsertConfig
+  , sioRewards :: RewardsConfig
   , sioMultiAsset :: MultiAssetConfig
   , sioMetadata :: MetadataConfig
   , sioPlutus :: PlutusConfig
@@ -189,6 +191,10 @@ data ShelleyInsertConfig
   = ShelleyEnable
   | ShelleyDisable
   | ShelleyStakeAddrs (NonEmpty ShortByteString)
+  deriving (Eq, Show)
+
+newtype RewardsConfig = RewardsConfig
+  {areRewardsEnabled :: Bool}
   deriving (Eq, Show)
 
 data MultiAssetConfig
@@ -382,6 +388,7 @@ instance FromJSON SyncInsertOptions where
       <$> obj .:? "tx_out" .!= sioTxOut def
       <*> obj .:? "ledger" .!= sioLedger def
       <*> obj .:? "shelley" .!= sioShelley def
+      <*> pure (sioRewards def)
       <*> obj .:? "multi_asset" .!= sioMultiAsset def
       <*> obj .:? "metadata" .!= sioMetadata def
       <*> obj .:? "plutus" .!= sioPlutus def
@@ -572,6 +579,7 @@ instance Default SyncInsertOptions where
       { sioTxOut = TxOutEnable
       , sioLedger = LedgerEnable
       , sioShelley = ShelleyEnable
+      , sioRewards = RewardsConfig True
       , sioMultiAsset = MultiAssetEnable
       , sioMetadata = MetadataEnable
       , sioPlutus = PlutusEnable

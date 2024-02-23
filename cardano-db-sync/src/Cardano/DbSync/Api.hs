@@ -215,6 +215,7 @@ fullInsertOptions =
     { sioTxOut = TxOutEnable
     , sioLedger = LedgerEnable
     , sioShelley = ShelleyEnable
+    , sioRewards = RewardsConfig True
     , sioMultiAsset = MultiAssetEnable
     , sioMetadata = MetadataEnable
     , sioPlutus = PlutusEnable
@@ -229,6 +230,7 @@ onlyUTxOInsertOptions =
     { sioTxOut = TxOutEnable
     , sioLedger = LedgerIgnore
     , sioShelley = ShelleyDisable
+    , sioRewards = RewardsConfig True
     , sioMultiAsset = MultiAssetDisable
     , sioMetadata = MetadataDisable
     , sioPlutus = PlutusDisable
@@ -247,8 +249,9 @@ disableAllInsertOptions :: SyncInsertOptions
 disableAllInsertOptions =
   SyncInsertOptions
     { sioTxOut = TxOutDisable
-    , sioLedger = LedgerIgnore
+    , sioLedger = LedgerDisable
     , sioShelley = ShelleyDisable
+    , sioRewards = RewardsConfig False
     , sioMultiAsset = MultiAssetDisable
     , sioMetadata = MetadataDisable
     , sioPlutus = PlutusDisable
