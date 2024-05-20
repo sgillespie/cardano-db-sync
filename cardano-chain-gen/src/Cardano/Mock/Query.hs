@@ -7,6 +7,7 @@ module Cardano.Mock.Query (
   queryMultiAssetCount,
   queryTxMetadataCount,
   queryDRepDistrAmount,
+  queryCommitteeHashes,
 ) where
 
 import qualified Cardano.Db as Db
@@ -89,3 +90,11 @@ queryDRepDistrAmount drepHash epochNo = do
     pure (distr ^. Db.DrepDistrAmount)
 
   pure $ maybe 0 unValue res
+
+queryCommitteeHashes :: MonadIO io => ReaderT SqlBackend io [ByteString]
+queryCommitteeHashes = do
+  res <- select $ do
+    cc <- from $ table @Db.CommitteeHash
+    pure (cc ^. Db.CommitteeHashRaw)
+
+  pure (map unValue res)
