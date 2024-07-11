@@ -28,7 +28,7 @@ jobs:
     env:
       # Increment this value to "invalidate" the cabal cache. Be sure to do this
       # after updating dependencies (Hackage or chap)
-      CABAL_CACHE_VERSION: 1
+      CABAL_CACHE_VERSION: 2
 
     steps:
       - name: Checkout code
@@ -47,16 +47,18 @@ jobs:
         # Homebrew's icu4c conflics with Nix's
         run: |
           brew uninstall --ignore-dependencies icu4c
-      - name: cache cabal
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cabal-devx/packages
-            ~/.cabal-devx/store
-          key: ${{ env.CABAL_CACHE_VERSION }}-${{ runner.os }}-${{ matrix.compiler-nix-name }}-${{ hashFiles('**/*.cabal', '**/cabal.project', '**/cabal.project.freeze') }}
-          restore-keys: ${{ env.CABAL_CACHE_VERSION }}-${{ runner.os }}-${{ matrix.compiler-nix-name }}-
+
       - name: cabal update
         run: cabal update
+
+      # Generate the build plan
+      - run: cabal build all --dry-run
+
+      - uses: andreabedini/cabal-cache-native@main
+        with:
+          store-path: ~/.cabal-devx/store
+          extra-cache-key: "${{ env.CABAL_CACHE_VERSION }}-${{ runner.os }}"
+
       - name: cabal build dependencies
         run: cabal build all -j --enable-tests --only-dependencies
       - name: cabal build
