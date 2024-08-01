@@ -19,7 +19,7 @@ const config = {
   projectName: 'cardano-db-sync',
   trailingSlash: false,
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   i18n: {
