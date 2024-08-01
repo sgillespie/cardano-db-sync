@@ -17,6 +17,7 @@ const config = {
   // GitHub pages deployment config.
   organizationName: 'sgillespie',
   projectName: 'cardano-db-sync',
+  trailingSlash: false,
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
