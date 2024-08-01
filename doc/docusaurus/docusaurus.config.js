@@ -38,7 +38,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/sgillespie/cardano-db-sync/tree/master/docs/',
+          'https://github.com/sgillespie/cardano-db-sync/tree/docs/docusaurus/doc/docusaurus',
         },
         theme: {
           customCss: './src/css/custom.css',
