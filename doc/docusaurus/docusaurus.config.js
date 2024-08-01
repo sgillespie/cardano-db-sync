@@ -37,7 +37,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/sgillespie/cardano-db-sync/tree/master/docs/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -52,9 +52,9 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'Cardano DB Sync',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Cardano',
           src: 'img/logo.svg',
         },
         items: [
@@ -62,10 +62,10 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'User Guide',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/sgillespie/cardano-db-sync',
             label: 'GitHub',
             position: 'right',
           },
