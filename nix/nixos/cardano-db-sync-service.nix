@@ -295,10 +295,11 @@ in {
       path = with pkgs; [
         self.cardanoDbSyncHaskellPackages.cardano-db-tool.components.exes.cardano-db-tool
         config.services.postgresql.package
-        netcat
         bash
+        getconf
         gnutar
         gzip
+        netcat
       ];
       preStart = ''
         for x in {1..60}; do
