@@ -110,7 +110,7 @@ import Cardano.Db.Types
 import Cardano.Ledger.BaseTypes (CertIx (..), TxIx (..))
 import Cardano.Ledger.Credential (Ptr (..))
 import Cardano.Slotting.Slot (SlotNo (..))
-import Control.Monad.Extra (join, whenJust)
+import Control.Monad.Extra (whenJust)
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Trans.Reader (ReaderT)
 import Data.ByteString.Char8 (ByteString)
@@ -405,7 +405,8 @@ queryCurrentEpochNo = do
   res <- select $ do
     blk <- from $ table @Block
     pure $ max_ (blk ^. BlockEpochNo)
-  pure $ join (unValue =<< listToMaybe res)
+
+  pure (unValue =<< listToMaybe res)
 
 queryNormalEpochRewardCount ::
   MonadIO m =>
