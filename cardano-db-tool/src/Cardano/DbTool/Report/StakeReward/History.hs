@@ -150,7 +150,7 @@ queryHistoryStakeRewards address = do
         blk <- from $ table @Block
         where_ (isJust $ blk ^. BlockEpochNo)
         pure $ max_ (blk ^. BlockEpochNo)
-      pure $ maybe 0 (pred . pred) (join $ unValue =<< listToMaybe res)
+      pure $ maybe 0 (pred . pred) (unValue =<< listToMaybe res)
 
 renderRewards :: Text -> [EpochReward] -> IO ()
 renderRewards saddr xs = do
