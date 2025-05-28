@@ -172,9 +172,8 @@
             shell.tools = {
               cabal = "latest";
               fourmolu = "latest";
-              haskell-language-server = {
-                src = nixpkgs.haskell-nix.sources."hls-2.10";
-              };
+              # TODO[sgillespie]: haskell-nix.sources does not yet contain hls-2.11
+              haskell-language-server = "2.11.0.0";
             } // lib.optionalAttrs (config.compiler-nix-name == "ghc966") {
               weeder = "latest";
             };
@@ -189,6 +188,7 @@
 
             modules = [
               ({ lib, pkgs, ... }: {
+                package-keys = ["ekg"];
                 # Ignore version bounds
                 packages.katip.doExactConfig = true;
                 # Split data to reduce closure size
